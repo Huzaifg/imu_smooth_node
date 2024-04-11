@@ -6,7 +6,7 @@ import numpy as np
 class ImuSmoothingNode(Node):
     def __init__(self):
         super().__init__('imu_smoothing_node')
-        self.hz_from_actual_imu = 500
+        self.hz_from_actual_imu = 1000
         self.hz_to_publish = 100
 
         self.buffer_size = int(round(self.hz_from_actual_imu / self.hz_to_publish))
@@ -29,6 +29,13 @@ class ImuSmoothingNode(Node):
         smoothed_imu.linear_acceleration.x = np.mean([imu.linear_acceleration.x for imu in self.imu_buffer])
         smoothed_imu.linear_acceleration.y = np.mean([imu.linear_acceleration.y for imu in self.imu_buffer])
         smoothed_imu.linear_acceleration.z = np.mean([imu.linear_acceleration.z for imu in self.imu_buffer])
+        smoothed_imu.angular_velocity.x = np.mean([imu.angular_velocity.x for imu in self.imu_buffer])
+        smoothed_imu.angular_velocity.y = np.mean([imu.angular_velocity.y for imu in self.imu_buffer])
+        smoothed_imu.angular_velocity.z = np.mean([imu.angular_velocity.z for imu in self.imu_buffer])
+        smoothed_imu.orientation.x = np.mean([imu.orientation.x for imu in self.imu_buffer])
+        smoothed_imu.orientation.y = np.mean([imu.orientation.y for imu in self.imu_buffer])
+        smoothed_imu.orientation.z = np.mean([imu.orientation.z for imu in self.imu_buffer])
+        smoothed_imu.orientation.w = np.mean([imu.orientation.w for imu in self.imu_buffer])
         self.imu_pub.publish(smoothed_imu)
 
 def main(args=None):
